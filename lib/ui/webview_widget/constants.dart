@@ -1,4 +1,4 @@
-const WOOT_PREFIX = 'doo-widget:';
+const DOO_PREFIX = 'doo-widget:';
 
 class PostMessageEvents {
   static const SET_LOCALE = 'set-locale';

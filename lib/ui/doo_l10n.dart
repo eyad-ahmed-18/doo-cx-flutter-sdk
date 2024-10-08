@@ -30,19 +30,22 @@ class DOOL10n extends ChatL10n {
   final String conversationResolvedMessage;
 
   /// Creates a new DOO l10n
-  const DOOL10n(
-      {this.attachmentButtonAccessibilityLabel = "",
-      this.emptyChatPlaceholder = "",
-      this.fileButtonAccessibilityLabel = "",
-      this.onlineText = "Typically replies in a few hours",
-      this.offlineText = "We're away at the moment",
-      this.typingText = "typing...",
-      this.inputPlaceholder = "Type your message",
-      this.sendButtonAccessibilityLabel = "Send Message",
-      this.conversationResolvedMessage =
-          "Your ticket has been marked as resolved",
-      super.unreadMessagesLabel = ""})
-      : super(
+  const DOOL10n({
+    this.attachmentButtonAccessibilityLabel = "",
+    this.emptyChatPlaceholder = "",
+    this.fileButtonAccessibilityLabel = "",
+    this.onlineText = "Typically replies in a few hours",
+    this.offlineText = "We're away at the moment",
+    this.typingText = "typing...",
+    this.inputPlaceholder = "Type your message",
+    this.sendButtonAccessibilityLabel = "Send Message",
+    this.conversationResolvedMessage =
+        "Your ticket has been marked as resolved",
+    super.unreadMessagesLabel = "",
+    super.and = "and",
+    super.isTyping = "is typing",
+    super.others = "others",
+  }) : super(
             attachmentButtonAccessibilityLabel: '',
             emptyChatPlaceholder: '',
             fileButtonAccessibilityLabel: '',

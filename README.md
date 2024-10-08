@@ -2,7 +2,7 @@
 
 # DOO CX Flutter SDK
 
-A package to integrate DOO CX into your Flutter mobile application for different platforms. [DOO CX](https://www.doo.ooo) helps businesses automate routine tasks, optimize sales and customer service processes, and provide personalized interactions by seamlessly integrating AI with existing tools and workflows.
+A package to integrate DOO CX into your Flutter mobile application for Android and iOS. [DOO CX](https://www.doo.ooo) helps businesses automate routine tasks, optimize sales and customer service processes, and provide personalized interactions by seamlessly integrating AI with existing tools and workflows.
 
 ## 1. Add the package to your project
 
@@ -28,47 +28,9 @@ dependencies:
 ### a. Using DOOWidget
 
 * Create a website channel in DOO dashboard.
-* Replace websiteToken prop in the 'main.dart' file as the following:
+* Replace your_website_token in the 'main.dart' file as the following:
 
 ```dart
-import 'dart:io';
-import 'package:doo_cx_flutter_sdk/doo_cx_flutter_sdk.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image/image.dart' as image;
-import 'package:image_picker/image_picker.dart' as image_picker;
-import 'package:path_provider/path_provider.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
@@ -83,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: DOOWidget(
-        websiteToken: "websiteToken",
+        websiteToken: "your_website_token",
         baseUrl: "https://cx.doo.ooo",
         user: DOOUser(
           identifier: "flutter_tester",
@@ -91,56 +53,27 @@ class _MyHomePageState extends State<MyHomePage> {
           email: "someone@example.com",
         ),
         locale: "en",
-        closeWidget: () {
-          if (Platform.isAndroid) {
-            SystemNavigator.pop();
-          } else if (Platform.isIOS) {
-            exit(0);
-          }
-        },
-        //attachment only works on Android for now
-        onAttachFile: _androidFilePicker,
+        closeWidget: _handleCloseWidget,
+        onAttachFile: _handleAttachFile,
         onLoadStarted: () {
           if (kDebugMode) {
-            print("loading widget");
+            print("Loading Widget");
           }
         },
         onLoadProgress: (int progress) {
           if (kDebugMode) {
-            print("loading... $progress");
+            print("Loading... $progress");
           }
         },
         onLoadCompleted: () {
           if (kDebugMode) {
-            print("widget loaded");
+            print("Widget Loaded");
           }
         },
       ),
     );
   }
-
-  Future<List<String>> _androidFilePicker() async {
-    final picker = image_picker.ImagePicker();
-    final photo =
-        await picker.pickImage(source: image_picker.ImageSource.gallery);
-
-    if (photo == null) {
-      return [];
-    }
-
-    final imageData = await photo.readAsBytes();
-    final decodedImage = image.decodeImage(imageData);
-    final scaledImage = image.copyResize(decodedImage!, width: 500);
-    final jpg = image.encodeJpg(scaledImage, quality: 90);
-
-    final filePath = (await getTemporaryDirectory()).uri.resolve(
-          './image_${DateTime.now().microsecondsSinceEpoch}.jpg',
-        );
-    final file = await File.fromUri(filePath).create(recursive: true);
-    await file.writeAsBytes(jpg, flush: true);
-
-    return [file.uri.toString()];
-  }
+  // The rest of the code here
 }
 ```
 

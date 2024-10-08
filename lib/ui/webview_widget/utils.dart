@@ -14,14 +14,14 @@ bool isJsonString(string) {
   return true;
 }
 
-String createWootPostMessage(object) {
-  final stringfyObject = "${WOOT_PREFIX}${jsonEncode(object)}";
+String createDOOPostMessage(object) {
+  final stringfyObject = "${DOO_PREFIX}${jsonEncode(object)}";
   final script = 'window.postMessage(\'${stringfyObject}\');';
   return script;
 }
 
 String getMessage(String data) {
-  return data.replaceAll(WOOT_PREFIX, '');
+  return data.replaceAll(DOO_PREFIX, '');
 }
 
 String generateScripts(
@@ -33,21 +33,21 @@ String generateScripts(
       "identifier": user.identifier,
       "user": user,
     };
-    script += createWootPostMessage(userObject);
+    script += createDOOPostMessage(userObject);
   }
   if (locale != null) {
     final localeObject = {
       "event": PostMessageEvents.SET_LOCALE,
       "locale": locale
     };
-    script += createWootPostMessage(localeObject);
+    script += createDOOPostMessage(localeObject);
   }
   if (customAttributes != null) {
     final attributeObject = {
       "event": PostMessageEvents.SET_CUSTOM_ATTRIBUTES,
       "customAttributes": customAttributes,
     };
-    script += createWootPostMessage(attributeObject);
+    script += createDOOPostMessage(attributeObject);
   }
   return script;
 }
