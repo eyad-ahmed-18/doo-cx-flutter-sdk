@@ -32,8 +32,6 @@ build/
 .packages
 .pub-cache/
 .pub/
-*.g.dart
-*.mocks.dart
 applicationDocumentsPath/
 hive_testing_path/
 

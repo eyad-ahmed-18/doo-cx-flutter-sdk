@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:doo_cx_flutter_sdk/ui/webview_widget/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,77 +61,83 @@ class Webview extends StatefulWidget {
 
 class _WebviewState extends State<Webview> {
   WebViewController? _controller;
-  bool _isWeb = false;
 
   @override
   void initState() {
     super.initState();
-    _isWeb = identical(0, 0.0);
+    // Enable hybrid composition on Android
+    if (Platform.isAndroid) {
+      WebViewPlatform.instance =
+          webview_flutter_android.AndroidWebViewPlatform();
+    } else if (Platform.isIOS) {
+      WebViewPlatform.instance =
+          webview_flutter_wkwebview.WebKitWebViewPlatform();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       String webviewUrl = widget.widgetUrl;
       final cwCookie = await StoreHelper.getCookie();
       if (cwCookie.isNotEmpty) {
         webviewUrl = "${webviewUrl}&cw_conversation=${cwCookie}";
       }
-      _initMobileWebView(webviewUrl);
-    });
-  }
-
-  void _initMobileWebView(String webviewUrl) {
-    setState(() {
-      _controller = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(Colors.white)
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onProgress: (int progress) {
-              widget.onLoadProgress?.call(progress);
-            },
-            onPageStarted: (String url) {
-              widget.onLoadStarted?.call();
-            },
-            onPageFinished: (String url) async {
-              widget.onLoadCompleted?.call();
-            },
-            onWebResourceError: (WebResourceError error) {},
-            onNavigationRequest: (NavigationRequest request) {
-              _goToUrl(request.url);
-              return NavigationDecision.prevent;
-            },
-          ),
-        )
-        ..addJavaScriptChannel("ReactNativeWebView",
-            onMessageReceived: (JavaScriptMessage jsMessage) {
-          print("DOO message received: ${jsMessage.message}");
-          final message = getMessage(jsMessage.message);
-          if (isJsonString(message)) {
-            final parsedMessage = jsonDecode(message);
-            final eventType = parsedMessage["event"];
-            final type = parsedMessage["type"];
-            if (eventType == 'loaded') {
-              final authToken = parsedMessage["config"]["authToken"];
-              StoreHelper.storeCookie(authToken);
-              _controller?.runJavaScript(widget.injectedJavaScript);
+      setState(() {
+        _controller = WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(Colors.white)
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onProgress: (int progress) {
+                // Update loading bar.
+                widget.onLoadProgress?.call(progress);
+              },
+              onPageStarted: (String url) {
+                widget.onLoadStarted?.call();
+              },
+              onPageFinished: (String url) async {
+                widget.onLoadCompleted?.call();
+              },
+              onWebResourceError: (WebResourceError error) {},
+              onNavigationRequest: (NavigationRequest request) {
+                if (request.url.startsWith('file://')) {
+                  _handleFileSelection();
+                  return NavigationDecision.prevent;
+                }
+                _goToUrl(request.url);
+                return NavigationDecision.prevent;
+              },
+            ),
+          )
+          ..addJavaScriptChannel("ReactNativeWebView",
+              onMessageReceived: (JavaScriptMessage jsMessage) {
+            print("DOO message received: ${jsMessage.message}");
+            final message = getMessage(jsMessage.message);
+            if (isJsonString(message)) {
+              final parsedMessage = jsonDecode(message);
+              final eventType = parsedMessage["event"];
+              final type = parsedMessage["type"];
+              if (eventType == 'loaded') {
+                final authToken = parsedMessage["config"]["authToken"];
+                StoreHelper.storeCookie(authToken);
+                _controller?.runJavaScript(widget.injectedJavaScript);
+              }
+              if (type == 'close-widget') {
+                widget.closeWidget?.call();
+              }
             }
-            if (type == 'close-widget') {
-              widget.closeWidget?.call();
-            }
-          }
-        })
-        ..loadRequest(Uri.parse(webviewUrl));
+          })
+          ..loadRequest(Uri.parse(webviewUrl));
 
-      if (!_isWeb && widget.onAttachFile != null) {
-        if (WebViewPlatform.instance
-            is webview_flutter_android.AndroidWebViewPlatform) {
+        if (Platform.isAndroid) {
           final androidController = _controller!.platform
               as webview_flutter_android.AndroidWebViewController;
           androidController
               .setOnShowFileSelector((_) => widget.onAttachFile!.call());
-        } else if (WebViewPlatform.instance
-            is webview_flutter_wkwebview.WebKitWebViewPlatform) {
-          // iOS implementation for file attachment if needed
+        } else if (Platform.isIOS) {
+          final iOSController = _controller!.platform
+              as webview_flutter_wkwebview.WebKitWebViewController;
+          iOSController.setAllowsBackForwardNavigationGestures(false);
         }
-      }
+      });
     });
   }
 
@@ -141,7 +148,19 @@ class _WebviewState extends State<Webview> {
         : SizedBox();
   }
 
-  _goToUrl(String url) {
+  void _goToUrl(String url) {
     launchUrl(Uri.parse(url));
+  }
+
+  void _handleFileSelection() async {
+    if (widget.onAttachFile != null) {
+      List<String> files = await widget.onAttachFile!();
+      if (files.isNotEmpty) {
+        String fileList = files.map((file) => '"$file"').join(',');
+        String script =
+            'window.postMessage({"type": "file-selected", "files": [$fileList]});';
+        _controller?.runJavaScript(script);
+      }
+    }
   }
 }
