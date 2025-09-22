@@ -62,11 +62,40 @@ class DOOClientApiInterceptor extends Interceptor {
   }
 
   /// Clears and recreates contact when a 401 (Unauthorized), 403 (Forbidden) or 404 (Not found)
-  /// response is returned from DOO public client api
+  /// response is returned from DOO public client api. Also handles 429 (Rate Limit) errors.
   @override
   Future<void> onResponse(
       Response response, ResponseInterceptorHandler handler) async {
     await responseLock.synchronized(() async {
+      // Handle rate limiting (429) by implementing exponential backoff
+      if (response.statusCode == 429) {
+        final retryAfter = response.headers['retry-after']?.first;
+        int delaySeconds = 5; // Default delay
+        
+        if (retryAfter != null) {
+          delaySeconds = int.tryParse(retryAfter) ?? 5;
+        }
+        
+        // Cap the delay at 60 seconds for user experience
+        delaySeconds = delaySeconds > 60 ? 60 : delaySeconds;
+        
+        print('DOO SDK: Rate limited. Retrying after $delaySeconds seconds...');
+        
+        // Wait for the specified delay
+        await Future.delayed(Duration(seconds: delaySeconds));
+        
+        // Retry the request
+        try {
+          final retryResponse = await _authService.dio.fetch(response.requestOptions);
+          handler.next(retryResponse);
+          return;
+        } catch (e) {
+          print('DOO SDK: Retry failed: $e');
+          handler.next(response); // Return original response if retry fails
+          return;
+        }
+      }
+      
       if (response.statusCode == 401 ||
           response.statusCode == 403 ||
           response.statusCode == 404) {

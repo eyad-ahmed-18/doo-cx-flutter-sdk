@@ -9,7 +9,6 @@ import 'doo_chat_page.dart';
 
 ///DOO chat modal widget
 /// {@category FlutterClientSdk}
-@deprecated
 class DOOChatDialog extends StatefulWidget {
   static show(
     BuildContext context, {
@@ -102,7 +101,6 @@ class DOOChatDialog extends StatefulWidget {
   _DOOChatDialogState createState() => _DOOChatDialogState();
 }
 
-@deprecated
 class _DOOChatDialogState extends State<DOOChatDialog> {
   late String status;
   late DOOL10n localizedStrings;

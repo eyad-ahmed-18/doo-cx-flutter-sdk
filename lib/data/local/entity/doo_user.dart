@@ -6,11 +6,13 @@ import '../local_storage.dart';
 
 part 'doo_user.g.dart';
 
-///
+/// DOO user represents a customer or user in the DOO system
+/// 
+/// This class is used to identify and personalize the customer's experience
 @JsonSerializable(explicitToJson: true)
 @HiveType(typeId: DOO_USER_HIVE_TYPE_ID)
 class DOOUser extends Equatable {
-  ///custom DOO user identifier
+  ///custom DOO user identifier (required)
   @JsonKey()
   @HiveField(0)
   final String? identifier;
@@ -40,20 +42,33 @@ class DOOUser extends Equatable {
   @HiveField(5)
   final dynamic customAttributes;
 
-  DOOUser(
-      {this.identifier,
-      this.identifierHash,
-      this.name,
-      this.email,
-      this.avatarUrl,
-      this.customAttributes});
+  /// Creates a DOOUser instance with user information
+  /// 
+  /// [identifier] is required for user tracking across sessions
+  /// [name] and [email] are recommended for better user experience
+  DOOUser({
+    this.identifier,
+    this.identifierHash,
+    this.name,
+    this.email,
+    this.avatarUrl,
+    this.customAttributes
+  });
 
-  @override
-  List<Object?> get props =>
-      [identifier, identifierHash, name, email, avatarUrl, customAttributes];
-
+  /// Factory constructor to create a DOOUser from JSON
   factory DOOUser.fromJson(Map<String, dynamic> json) =>
       _$DOOUserFromJson(json);
 
+  /// Convert DOOUser to JSON
   Map<String, dynamic> toJson() => _$DOOUserToJson(this);
+
+  @override
+  List<Object?> get props => [
+        identifier,
+        identifierHash,
+        name,
+        email,
+        avatarUrl,
+        customAttributes,
+      ];
 }

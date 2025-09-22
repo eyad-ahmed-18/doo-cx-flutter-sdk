@@ -2,51 +2,63 @@ import 'package:doo_cx_flutter_sdk/data/local/entity/doo_user.dart';
 import 'package:doo_cx_flutter_sdk/ui/webview_widget/webview.dart';
 import 'package:flutter/material.dart';
 
-///DOOWidget
+/// DOOWidget is a ready-to-use webview component that displays the DOO chat interface
+/// 
+/// This widget provides a full-featured chat experience that can be embedded directly
+/// into your Flutter application. It handles user authentication, file attachments,
+/// and event callbacks to integrate seamlessly with your app.
+/// 
 /// {@category FlutterClientSdk}
 class DOOWidget extends StatefulWidget {
-  ///Website channel token
+  /// Website channel token for authentication
   final String websiteToken;
 
-  ///Installation url for DOO
+  /// Base URL of your DOO installation (e.g., "https://cx.doo.ooo")
   final String baseUrl;
 
-  ///User information about the user like email, username and avatar_url
+  /// User information including identifier, name, email, and avatar URL
   final DOOUser? user;
 
-  ///User locale
+  /// User locale for localization (defaults to "en")
   final String locale;
 
-  ///Widget Close event
+  /// Callback triggered when the widget is closed
   final void Function()? closeWidget;
 
-  ///Additional information about the customer
-  final customAttributes;
+  /// Additional information about the customer (optional)
+  final dynamic customAttributes;
 
-  ///Widget Attachment event. Currently supported only on Android devices
+  /// Callback to handle file attachment selection
+  /// 
+  /// Should return a list of file URIs (currently supported only on Android devices)
   final Future<List<String>> Function()? onAttachFile;
 
-  ///Widget Load started event
+  /// Callback triggered when the widget starts loading
   final void Function()? onLoadStarted;
 
-  ///Widget Load progress event
+  /// Callback triggered during widget loading with progress percentage
   final void Function(int)? onLoadProgress;
 
-  ///Widget Load completed event
+  /// Callback triggered when the widget finishes loading
   final void Function()? onLoadCompleted;
-  DOOWidget(
-      {Key? key,
-      required this.websiteToken,
-      required this.baseUrl,
-      this.user,
-      this.locale = "en",
-      this.customAttributes,
-      this.closeWidget,
-      this.onAttachFile,
-      this.onLoadStarted,
-      this.onLoadProgress,
-      this.onLoadCompleted})
-      : super(key: key);
+  
+  /// Creates a DOOWidget instance with the specified configuration
+  /// 
+  /// [websiteToken] and [baseUrl] are required parameters.
+  /// Providing [user] details is recommended for user identification.
+  const DOOWidget({
+    Key? key,
+    required this.websiteToken,
+    required this.baseUrl,
+    this.user,
+    this.locale = "en",
+    this.customAttributes,
+    this.closeWidget,
+    this.onAttachFile,
+    this.onLoadStarted,
+    this.onLoadProgress,
+    this.onLoadCompleted
+  }) : super(key: key);
 
   @override
   _DOOWidgetState createState() => _DOOWidgetState();

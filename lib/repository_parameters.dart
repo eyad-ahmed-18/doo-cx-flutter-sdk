@@ -1,15 +1,23 @@
 import 'package:doo_cx_flutter_sdk/doo_callbacks.dart';
 import 'package:doo_cx_flutter_sdk/doo_parameters.dart';
 import 'package:doo_cx_flutter_sdk/di/modules.dart';
+import 'package:equatable/equatable.dart';
 
-/// Represent all needed parameters necessary for [dooRepositoryProvider] to successfully provide an instance
-/// of [DOORepository].
-class RepositoryParameters {
-  /// See [DOOParameters]
-  DOOParameters params;
+/// Represents all required parameters for [dooRepositoryProvider] to successfully provide 
+/// an instance of [DOORepository].
+/// 
+/// This class encapsulates configuration parameters and callback handlers needed
+/// for the DOO repository to function properly.
+class RepositoryParameters extends Equatable {
+  /// Configuration parameters for the DOO client
+  final DOOParameters params;
 
-  /// See [DOOCallbacks]
-  DOOCallbacks callbacks;
+  /// Callback handlers for DOO events
+  final DOOCallbacks callbacks;
 
+  /// Creates repository parameters with the specified configuration
   RepositoryParameters({required this.params, required this.callbacks});
+  
+  @override
+  List<Object?> get props => [params, callbacks];
 }

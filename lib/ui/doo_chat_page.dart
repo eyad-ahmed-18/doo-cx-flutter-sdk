@@ -13,7 +13,6 @@ import 'package:uuid/uuid.dart';
 
 ///DOO chat widget
 /// {@category FlutterClientSdk}
-@deprecated
 class DOOChat extends StatefulWidget {
   /// Specifies a custom app bar for DOO page widget
   final PreferredSizeWidget? appBar;
@@ -416,7 +415,7 @@ class _DOOChatState extends State<DOOChat> {
                 user: _user,
                 onEndReached: widget.onEndReached,
                 onEndReachedThreshold: widget.onEndReachedThreshold,
-                onMessageLongPress: widget.onMessageLongPress!,
+                onMessageLongPress: widget.onMessageLongPress,
                 // onTextChanged: widget.onTextChanged,
                 showUserAvatars: widget.showUserAvatars,
                 showUserNames: widget.showUserNames,
@@ -433,7 +432,7 @@ class _DOOChatState extends State<DOOChat> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  "assets/logo_grey.png",
+                  "assets/doo-logo.png",
                   package: 'doo_cx_flutter_sdk',
                   width: 15,
                   height: 15,

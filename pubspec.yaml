@@ -1,6 +1,6 @@
 name: doo_cx_flutter_sdk
 description: "A package to integrate DOO CX into your Flutter mobile application for Android and iOS. DOO is an innovative AI coworker solution designed to enhance Customer Experience (CX)."
-version: 1.0.1
+version: 1.1.1
 homepage: https://github.com/doo-inc/doo-cx-flutter-sdk
 
 environment:
@@ -19,6 +19,7 @@ dependencies:
   dio: ^5.7.0
   equatable: ^2.0.5
   riverpod: ^2.5.3
+  flutter_riverpod: ^2.5.3
   synchronized: ^3.3.0+3
   intl: ^0.19.0
   flutter_chat_types: ^3.6.2
