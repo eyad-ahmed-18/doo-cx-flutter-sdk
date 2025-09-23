@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:doo_cx_flutter_sdk/ui/webview_widget/utils.dart';
-import 'package:doo_cx_flutter_sdk/ui/webview_widget/web_webview.dart';
+import 'package:doo_cx_flutter_sdk/ui/webview_widget/webview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -199,7 +199,7 @@ class _WebviewState extends State<Webview> {
       final websiteToken = uri.queryParameters['website_token'] ?? '';
       final baseUrl = '${uri.scheme}://${uri.host}:${uri.port}';
       
-      return WebWebview(
+      return Webview(
         websiteToken: websiteToken,
         baseUrl: baseUrl,
         closeWidget: widget.closeWidget,
