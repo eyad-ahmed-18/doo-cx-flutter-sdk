@@ -5,8 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:doo_cx_flutter_sdk/ui/webview_widget/utils.dart';
 
-import '../../data/local/entity/doo_user.dart';
-
 /// Web-specific implementation of DOO webview using HTML iframe
 /// 
 /// This implementation uses HTML iframe for web platform compatibility

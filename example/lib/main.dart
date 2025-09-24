@@ -2,24 +2,16 @@ import 'dart:io';
 import 'package:doo_cx_flutter_sdk/doo_cx_flutter_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image/image.dart' as image;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 // Import test pages
-import 'advanced_implementation_fixed.dart';
 import 'api_feature_test.dart';
 import 'error_handling_test.dart';
 import 'performance_test.dart';
 
 void main() {
-  // Register the web platform implementation
-  if (kIsWeb) {
-    WebViewPlatform.instance = WebWebViewPlatform();
-  }
   runApp(const MyApp());
 }
 
@@ -119,21 +111,6 @@ class HomePage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 15),
-            ElevatedButton.icon(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AdvancedImplementationExample(),
-                ),
-              ),
-              icon: const Icon(Icons.star),
-              label: const Text('Advanced Implementation'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green.shade700,
-                foregroundColor: Colors.white,
               ),
             ),
             const SizedBox(height: 10),
