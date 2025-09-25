@@ -155,7 +155,6 @@ class DOOChat extends StatefulWidget {
   _DOOChatState createState() => _DOOChatState();
 }
 
-@deprecated
 class _DOOChatState extends State<DOOChat> {
   ///
   List<types.Message> _messages = [];

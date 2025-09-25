@@ -223,8 +223,6 @@ String? eventMessageTypeToJson(DOOEventMessageType? actionType) {
       return "message.updated";
     case DOOEventMessageType.conversation_status_changed:
       return "conversation.status_changed";
-    default:
-      return actionType.toString();
   }
 }
 

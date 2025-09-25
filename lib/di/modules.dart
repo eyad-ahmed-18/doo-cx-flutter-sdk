@@ -36,7 +36,7 @@ final dooClientApiInterceptorProvider = Provider.family<DOOClientApiInterceptor,
   final localStorage = ref.watch(localStorageProvider(params));
   final authService = ref.watch(dooClientAuthServiceProvider(params));
   return DOOClientApiInterceptor(
-      params.inboxIdentifier, localStorage, authService);
+      params.inboxIdentifier ?? '', localStorage, authService);
 });
 
 /// Provides an instance of Dio with authentication interceptors

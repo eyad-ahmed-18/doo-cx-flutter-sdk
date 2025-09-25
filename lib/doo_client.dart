@@ -74,7 +74,7 @@ class DOOClient {
   /// 
   /// This is used to connect to a specific inbox in your DOO instance.
   /// You can find this in your DOO dashboard under Settings → Inboxes.
-  String get inboxIdentifier => _parameters.inboxIdentifier;
+  String? get inboxIdentifier => _parameters.inboxIdentifier;
 
   /// Get the website token if available (for webview integration)
   /// 
